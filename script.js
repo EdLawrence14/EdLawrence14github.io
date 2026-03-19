@@ -40,38 +40,23 @@
         if (stored) {
             try {
                 applications = JSON.parse(stored);
-                // 兼容旧数据：如果事件没有type字段，尝试将事件名称映射为type（简单处理）
+                // 兼容旧数据格式：如果事件没有 type 字段，则从事件名称映射
                 applications = applications.map(app => {
                     if (app.事件 && Array.isArray(app.事件)) {
                         app.事件 = app.事件.map(ev => ({
                             日期: ev.日期,
-                            类型: ev.类型 || (ev.事件名称 || '投递'),  // 旧数据的事件名称作为类型
+                            类型: ev.类型 || (ev.事件名称 || '投递'),
                             备注: ev.备注 || ''
                         }));
                     }
                     return app;
                 });
-            } catch { applications = []; }
-        }
-        if (!applications.length) {
-            // 新示例数据（使用类型字段）
-            const today = new Date().toISOString().split('T')[0];
-            const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
-            applications = [
-                { id: '1', 公司: '字节跳动', 岗位: '前端开发', 投递日期: yesterday, 状态: '面试', 地点: '北京', JD文本: '负责中台…', JD链接: 'https://jobs.bytedance.com', 事件: [
-                    { 日期: yesterday, 类型: '投递', 备注: '官网投递' },
-                    { 日期: yesterday, 类型: '线上测试', 备注: '通过' },
-                    { 日期: today, 类型: '一面', 备注: '技术面' }
-                ]},
-                { id: '2', 公司: '阿里巴巴', 岗位: '全栈', 投递日期: today, 状态: '已投递', 地点: '杭州', JD文本: 'Java+React', JD链接: '', 事件: [
-                    { 日期: today, 类型: '投递', 备注: '内推' }
-                ]},
-                { id: '3', 公司: '腾讯', 岗位: 'UX设计', 投递日期: yesterday, 状态: '拒绝', 地点: '深圳', JD文本: '设计系统', JD链接: '', 事件: [
-                    { 日期: yesterday, 类型: '投递', 备注: '' },
-                    { 日期: yesterday, 类型: '一面', 备注: '感觉良好' },
-                    { 日期: today, 类型: '被挂', 备注: '流程终止' }
-                ]}
-            ];
+            } catch {
+                applications = [];
+            }
+        } else {
+            // 没有本地存储数据时，初始化为空数组（无示例数据）
+            applications = [];
         }
     }
 
@@ -403,6 +388,6 @@
         }
     });
 
-    // 预加载数据
+    // 预加载数据（但此时不会显示，因为 mainApp 尚未显示）
     loadData();
 })();
