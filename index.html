@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes">
+    <title>微风投递 · 求职记录</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 初始启动界面 -->
+    <div id="initial-screen">
+        <div class="initial-card">
+            <h1>微风投递</h1>
+            <div class="slogan">温柔记录 · 清晰前行</div>
+            <button class="enter-btn" id="enter-main-btn">进入看板</button>
+        </div>
+    </div>
+
+    <!-- 主应用界面 (初始隐藏) -->
+    <div id="main-app">
+        <!-- 顶部新增按钮 -->
+        <div class="glass-card top-bar">
+            <span style="font-size: 1.6rem; font-weight: 300; color: #1d5a50;">📋 求职驿站</span>
+            <button class="new-record-btn" id="openNewModalBtn">+ 新增投递</button>
+        </div>
+
+        <!-- 统计看板 -->
+        <div class="glass-card" id="statsBoard">
+            <div class="section-title">投递看板</div>
+            <div class="stats-grid" id="statCards"></div>
+        </div>
+
+        <!-- 近期动态（保留，但只展示最近5条事件） -->
+        <div class="glass-card">
+            <div class="section-title">📌 近期动态</div>
+            <div id="recentTimeline" class="timeline-list"></div>
+        </div>
+
+        <!-- 所有投递列表 -->
+        <div class="glass-card">
+            <div class="section-title">📋 所有投递</div>
+            <div id="recordListContainer" class="record-list"></div>
+        </div>
+    </div>
+
+    <!-- 新增/编辑模态框 -->
+    <div id="formModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-title" id="formModalTitle">新增投递</div>
+            <form id="recordForm" onsubmit="return false;">
+                <input type="hidden" id="recordId" value="">
+                <div class="form-group">
+                    <label>公司 *</label>
+                    <input type="text" id="company" required placeholder="例如：字节跳动">
+                </div>
+                <div class="form-group">
+                    <label>岗位 *</label>
+                    <input type="text" id="position" required placeholder="前端开发">
+                </div>
+                <div class="form-group">
+                    <label>投递日期 *</label>
+                    <input type="date" id="applyDate" required>
+                </div>
+                <div class="form-group">
+                    <label>当前状态 *</label>
+                    <select id="status" required>
+                        <option value="已投递">已投递</option>
+                        <option value="初筛">初筛</option>
+                        <option value="面试">面试</option>
+                        <option value="offer">offer</option>
+                        <option value="拒绝">拒绝</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>地点 (可选)</label>
+                    <input type="text" id="location" placeholder="北京/远程">
+                </div>
+                <div class="form-group">
+                    <label>JD文本</label>
+                    <textarea id="jdText" rows="3" placeholder="粘贴职位描述..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label>JD链接</label>
+                    <input type="url" id="jdLink" placeholder="https://...">
+                </div>
+                <fieldset style="border: none; padding:0;">
+                    <legend style="color:#215f56;">📅 时间线事件 (可添加多个)</legend>
+                    <div id="eventsContainer"></div>
+                    <button type="button" class="add-event-btn" id="addEventRowBtn">+ 添加事件</button>
+                </fieldset>
+                <div class="modal-actions">
+                    <button type="button" class="btn-secondary" id="closeFormModalBtn">取消</button>
+                    <button type="submit" class="btn-primary" id="saveRecordBtn">保存</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 详情模态框 (包含思维导图式时间线) -->
+    <div id="detailModal" class="modal-overlay">
+        <div class="modal-content detail-view">
+            <div class="modal-title" id="detailModalTitle">职位详情</div>
+            <div id="detailContent"></div>
+            <div class="modal-actions">
+                <button class="btn-secondary" id="closeDetailModalBtn">关闭</button>
+                <button class="btn-primary" id="editFromDetailBtn">编辑</button>
+                <button class="delete-record-btn" id="deleteFromDetailBtn">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
