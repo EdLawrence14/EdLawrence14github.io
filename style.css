@@ -16,9 +16,9 @@ body {
     justify-content: center;
     position: relative;
     transition: background-image 0.5s ease;
+    background-color: #e8e1d4; /* 柔和米色后备 */
 }
 
-/* 柔光遮罩 */
 body::before {
     content: '';
     position: fixed;
@@ -399,7 +399,7 @@ body::before {
     font-size: 0.75rem;
 }
 
-/* 全览时间线卡片 (新样式) */
+/* 全览时间线卡片 */
 .global-timeline-cards {
     display: flex;
     flex-direction: column;
@@ -483,7 +483,7 @@ body::before {
     white-space: nowrap;
 }
 
-/* 模态框 (修复定位问题) */
+/* 模态框 */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -492,10 +492,10 @@ body::before {
     height: 100%;
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
-    display: none;  /* 默认隐藏 */
+    display: none;
     align-items: center;
     justify-content: center;
-    z-index: 2000;  /* 确保在最上层 */
+    z-index: 2000;
 }
 
 .modal-content {
@@ -518,7 +518,6 @@ body::before {
     margin-bottom: 1.2rem;
 }
 
-/* 表单样式 */
 .form-group {
     margin-bottom: 1.2rem;
 }
@@ -610,7 +609,7 @@ input:focus, select:focus, textarea:focus {
     cursor: pointer;
 }
 
-/* 详情页样式 */
+/* 详情页 */
 .detail-view p {
     margin: 0.6rem 0;
     background: #e9f7f2;
