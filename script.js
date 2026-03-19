@@ -5,6 +5,15 @@
     let currentFilterStatus = null;
     let currentDetailId = null;
 
+    // 柔和风景图片列表
+    const backgroundImages = [
+        'https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/1903702/pexels-photo-1903702.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&w=1920',
+        'https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&cs=tinysrgb&w=1920'
+    ];
+
     // 事件类型选项
     const EVENT_TYPES = [
         '投递', '线上测试', '一面', '二面', '三面', 'offer', '被挂'
@@ -30,9 +39,26 @@
     const editFromDetail = document.getElementById('editFromDetailBtn');
     const deleteFromDetail = document.getElementById('deleteFromDetailBtn');
 
+    // 视图相关
+    const dashboardView = document.getElementById('dashboard-view');
+    const companyView = document.getElementById('company-view');
+    const timelineView = document.getElementById('timeline-view');
+    const navTabs = document.querySelectorAll('.nav-tab');
+
+    // 看板内部容器
     const statCardsDiv = document.getElementById('statCards');
     const recentTimelineDiv = document.getElementById('recentTimeline');
     const recordListContainer = document.getElementById('recordListContainer');
+
+    // 新视图容器
+    const companyListContainer = document.getElementById('companyListContainer');
+    const globalTimelineCards = document.getElementById('globalTimelineCards');
+
+    // ---------- 随机背景 ----------
+    function setRandomBackground() {
+        const randomIndex = Math.floor(Math.random() * backgroundImages.length);
+        document.body.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
+    }
 
     // ---------- 数据初始化 ----------
     function loadData() {
@@ -40,7 +66,7 @@
         if (stored) {
             try {
                 applications = JSON.parse(stored);
-                // 兼容旧数据格式：如果事件没有 type 字段，则从事件名称映射
+                // 兼容旧数据格式
                 applications = applications.map(app => {
                     if (app.事件 && Array.isArray(app.事件)) {
                         app.事件 = app.事件.map(ev => ({
@@ -55,8 +81,7 @@
                 applications = [];
             }
         } else {
-            // 没有本地存储数据时，初始化为空数组（无示例数据）
-            applications = [];
+            applications = []; // 无示例数据
         }
     }
 
@@ -164,15 +189,129 @@
         });
     }
 
-    // 思维导图式时间线渲染 (基于事件数组)
+    // 获取事件图标
+    function getIconForType(type) {
+        const map = {
+            '投递': '📮', '线上测试': '🧪', '一面': '①', '二面': '②', '三面': '③', 'offer': '🎉', '被挂': '❌'
+        };
+        return map[type] || '📌';
+    }
+
+    // 渲染公司视图
+    function renderCompanyView() {
+        const companies = {};
+        applications.forEach(app => {
+            if (!companies[app.公司]) companies[app.公司] = [];
+            companies[app.公司].push(app);
+        });
+        const sortedCompanies = Object.keys(companies).sort();
+        if (sortedCompanies.length === 0) {
+            companyListContainer.innerHTML = '<div style="padding:1rem;">暂无公司记录</div>';
+            return;
+        }
+        let html = '';
+        sortedCompanies.forEach(company => {
+            const records = companies[company];
+            html += `
+                <div class="company-group">
+                    <div class="company-header">
+                        <span class="toggle-icon">▼</span>
+                        <span>${company} (${records.length})</span>
+                    </div>
+                    <div class="company-records" style="display: block;">
+            `;
+            records.forEach(rec => {
+                html += `
+                    <div class="company-record-item" data-id="${rec.id}">
+                        <span class="position-info">${rec.岗位}</span>
+                        <span class="status-badge">${rec.状态}</span>
+                        <span>📅 ${rec.投递日期}</span>
+                    </div>
+                `;
+            });
+            html += `</div></div>`;
+        });
+        companyListContainer.innerHTML = html;
+
+        // 折叠/展开
+        document.querySelectorAll('.company-header').forEach(header => {
+            header.addEventListener('click', (e) => {
+                const group = header.closest('.company-group');
+                const recordsDiv = group.querySelector('.company-records');
+                const icon = header.querySelector('.toggle-icon');
+                if (recordsDiv.style.display === 'none') {
+                    recordsDiv.style.display = 'block';
+                    icon.textContent = '▼';
+                } else {
+                    recordsDiv.style.display = 'none';
+                    icon.textContent = '▶';
+                }
+            });
+        });
+        // 点击记录跳转详情
+        document.querySelectorAll('.company-record-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const id = item.dataset.id;
+                if (id) showDetail(id);
+            });
+        });
+    }
+
+    // 渲染全览时间线（每个记录一个卡片，展示其所有事件）
+    function renderGlobalTimeline() {
+        if (!applications.length) {
+            globalTimelineCards.innerHTML = '<div style="padding:1rem;">暂无投递记录</div>';
+            return;
+        }
+        // 按投递日期倒序排列记录
+        const sortedApps = [...applications].sort((a,b) => (a.投递日期 > b.投递日期 ? -1 : 1));
+        let html = '';
+        sortedApps.forEach(app => {
+            // 该记录的事件按日期升序排列
+            const events = (app.事件 || []).sort((a,b) => (a.日期 > b.日期 ? 1 : -1));
+            let eventsHtml = '';
+            events.forEach(ev => {
+                eventsHtml += `
+                    <div class="timeline-event-row">
+                        <span class="event-icon">${getIconForType(ev.类型)}</span>
+                        <span class="event-type">${ev.类型}</span>
+                        <span class="event-remark">${ev.备注 || ''}</span>
+                        <span class="event-date">${ev.日期}</span>
+                    </div>
+                `;
+            });
+            html += `
+                <div class="timeline-record-card" data-id="${app.id}">
+                    <div class="timeline-card-header">
+                        <span class="company">${app.公司}</span>
+                        <span class="position">${app.岗位}</span>
+                        <span class="status">${app.状态}</span>
+                        <span class="date">📅 投递: ${app.投递日期}</span>
+                    </div>
+                    <div class="timeline-card-events">
+                        ${eventsHtml || '<div style="padding:0.5rem; color:#aaa;">暂无事件</div>'}
+                    </div>
+                </div>
+            `;
+        });
+        globalTimelineCards.innerHTML = html;
+        // 点击卡片跳转详情
+        document.querySelectorAll('.timeline-record-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const id = card.dataset.id;
+                if (id) showDetail(id);
+            });
+        });
+    }
+
+    // 思维导图式时间线渲染 (单个记录详情页用)
     function renderMindFlow(events) {
         if (!events || events.length === 0) return '<p>暂无时间线事件</p>';
-        // 按日期升序
         const sorted = [...events].sort((a,b) => (a.日期 > b.日期 ? 1 : -1));
         let html = '<div class="mindflow-container">';
         let rejected = false;
         for (let ev of sorted) {
-            if (rejected) break; // 遇到被挂后终止
+            if (rejected) break;
             const isReject = ev.类型 === '被挂';
             if (isReject) rejected = true;
             html += `
@@ -191,13 +330,6 @@
         }
         html += '</div>';
         return html;
-    }
-
-    function getIconForType(type) {
-        const map = {
-            '投递': '📮', '线上测试': '🧪', '一面': '①', '二面': '②', '三面': '③', 'offer': '🎉', '被挂': '❌'
-        };
-        return map[type] || '📌';
     }
 
     // 显示详情
@@ -323,11 +455,19 @@
         fullRender();
     }
 
-    // 全渲染
+    // 全渲染（所有视图）
     function fullRender() {
-        renderStats();
-        renderRecentTimeline();
-        renderRecordList();
+        if (dashboardView.classList.contains('active')) {
+            renderStats();
+            renderRecentTimeline();
+            renderRecordList();
+        }
+        if (companyView.classList.contains('active')) {
+            renderCompanyView();
+        }
+        if (timelineView.classList.contains('active')) {
+            renderGlobalTimeline();
+        }
     }
 
     // 填充表单用于编辑
@@ -352,12 +492,43 @@
         formModal.style.display = 'flex';
     }
 
+    // 视图切换
+    function switchView(viewId) {
+        document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+        document.getElementById(viewId).classList.add('active');
+        navTabs.forEach(tab => {
+            tab.classList.remove('active');
+            if (tab.dataset.view === viewId.replace('-view', '')) {
+                tab.classList.add('active');
+            }
+        });
+        // 渲染对应视图
+        if (viewId === 'dashboard-view') {
+            renderStats();
+            renderRecentTimeline();
+            renderRecordList();
+        } else if (viewId === 'company-view') {
+            renderCompanyView();
+        } else if (viewId === 'timeline-view') {
+            renderGlobalTimeline();
+        }
+    }
+
     // ---------- 事件绑定 ----------
     enterBtn.addEventListener('click', () => {
+        setRandomBackground();
         initialScreen.style.display = 'none';
         mainApp.style.display = 'flex';
         loadData();
-        fullRender();
+        switchView('dashboard-view');
+    });
+
+    // 导航点击
+    navTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            const view = tab.dataset.view;
+            switchView(view + '-view');
+        });
     });
 
     closeFormBtn.addEventListener('click', closeModals);
@@ -388,6 +559,6 @@
         }
     });
 
-    // 预加载数据（但此时不会显示，因为 mainApp 尚未显示）
+    // 预加载数据
     loadData();
 })();
