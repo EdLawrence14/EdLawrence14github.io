@@ -7,7 +7,6 @@
 
 body {
     min-height: 100vh;
-    background-image: url('https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1920');
     background-size: cover;
     background-position: center 30%;
     background-attachment: fixed;
@@ -16,8 +15,10 @@ body {
     align-items: flex-start;
     justify-content: center;
     position: relative;
+    transition: background-image 0.5s ease;
 }
 
+/* 柔光遮罩 */
 body::before {
     content: '';
     position: fixed;
@@ -25,12 +26,12 @@ body::before {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(255, 240, 230, 0.3);
+    background-color: rgba(255, 240, 230, 0.25);
     backdrop-filter: blur(2px);
     z-index: 0;
 }
 
-#app, #initial-screen, #main-app {
+#initial-screen, #main-app {
     position: relative;
     z-index: 2;
     width: 100%;
@@ -54,16 +55,16 @@ body::before {
 .initial-card {
     background: rgba(255, 255, 255, 0.75);
     backdrop-filter: blur(8px);
-    padding: 3rem 2rem;
+    padding: 2.5rem 2rem;
     border-radius: 48px 24px 48px 24px;
     box-shadow: 0 25px 40px -10px rgba(0, 40, 30, 0.3);
-    max-width: 650px;
+    max-width: 600px;
     width: 100%;
     border: 1px solid rgba(255, 255, 255, 0.6);
 }
 
 .initial-card h1 {
-    font-size: 3.2rem;
+    font-size: 3rem;
     font-weight: 400;
     letter-spacing: 2px;
     color: #1f4e4a;
@@ -72,14 +73,14 @@ body::before {
 }
 
 .slogan {
-    font-size: 1.4rem;
+    font-size: 1.3rem;
     font-weight: 300;
     color: #2b5e5a;
     border-top: 2px solid #b6d6d0;
     border-bottom: 2px solid #b6d6d0;
     display: inline-block;
-    padding: 0.6rem 1.2rem;
-    margin: 1.5rem 0 2rem 0;
+    padding: 0.5rem 1.2rem;
+    margin: 1.2rem 0 1.8rem 0;
     backdrop-filter: blur(2px);
     border-radius: 60px;
     background: rgba(245, 255, 250, 0.2);
@@ -89,8 +90,8 @@ body::before {
     background: #2f6b65;
     border: none;
     color: white;
-    font-size: 1.7rem;
-    padding: 1rem 3.5rem;
+    font-size: 1.5rem;
+    padding: 0.8rem 3rem;
     border-radius: 48px;
     cursor: pointer;
     box-shadow: 0 10px 20px -5px #1d463f;
@@ -110,25 +111,61 @@ body::before {
 #main-app {
     display: none;
     flex-direction: column;
-    gap: 1.8rem;
+    gap: 1.2rem;
 }
 
+/* 视图切换 */
+.view {
+    display: none;
+}
+.view.active {
+    display: block;
+}
+
+/* 导航标签 */
+.nav-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+.nav-tab {
+    background: rgba(220, 240, 235, 0.6);
+    backdrop-filter: blur(4px);
+    border: 1px solid #9fcbc1;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    font-size: 1rem;
+    color: #1f5a50;
+    cursor: pointer;
+    transition: 0.1s;
+}
+.nav-tab.active {
+    background: #2f6b65;
+    color: white;
+    border-color: #1f4f4a;
+}
+.nav-tab:hover {
+    background: #5f9b92;
+    color: white;
+}
+
+/* 玻璃卡片 (更紧凑) */
 .glass-card {
     background: rgba(255, 255, 250, 0.8);
     backdrop-filter: blur(8px);
-    border-radius: 32px;
-    padding: 1.5rem 1.2rem;
-    box-shadow: 0 12px 30px -8px rgba(20, 45, 40, 0.2);
+    border-radius: 28px;
+    padding: 1rem 1rem;
+    box-shadow: 0 8px 20px -8px rgba(20, 45, 40, 0.2);
     border: 1px solid rgba(255, 250, 240, 0.7);
 }
 
 .section-title {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     font-weight: 400;
     color: #1d4f4a;
-    margin-bottom: 1rem;
+    margin-bottom: 0.8rem;
     padding-left: 0.5rem;
-    border-left: 6px solid #79b0a8;
+    border-left: 5px solid #79b0a8;
     letter-spacing: 0.5px;
 }
 
@@ -136,18 +173,18 @@ body::before {
 .stats-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem;
+    gap: 0.5rem;
     justify-content: center;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.2rem;
 }
 
 .stat-item {
-    flex: 1 1 90px;
-    min-width: 80px;
+    flex: 1 1 70px;
+    min-width: 60px;
     background: rgba(245, 255, 250, 0.6);
     backdrop-filter: blur(2px);
-    border-radius: 40px;
-    padding: 1rem 0.2rem;
+    border-radius: 30px;
+    padding: 0.6rem 0.1rem;
     text-align: center;
     cursor: pointer;
     border: 1px solid rgba(175, 210, 190, 0.5);
@@ -157,41 +194,41 @@ body::before {
 .stat-item.active {
     background: #e0f0eb;
     border-color: #34756b;
-    box-shadow: 0 8px 14px -8px #2a6259;
+    box-shadow: 0 4px 8px -4px #2a6259;
     transform: scale(1.02);
 }
 
 .stat-number {
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 400;
     color: #1f5c54;
     line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.85rem;
+    font-size: 0.75rem;
     color: #3a5a55;
     font-weight: 500;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.2px;
 }
 
-/* 时间线列表（近期动态） */
+/* 近期动态列表 */
 .timeline-list {
     display: flex;
     flex-direction: column;
-    gap: 0.8rem;
+    gap: 0.5rem;
 }
 
 .timeline-item {
     background: rgba(250, 255, 250, 0.5);
-    border-radius: 60px;
-    padding: 0.7rem 1.2rem;
+    border-radius: 40px;
+    padding: 0.5rem 1rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
     justify-content: space-between;
     border-left: 5px solid #79b0a8;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     cursor: pointer;
     transition: 0.1s;
 }
@@ -203,7 +240,7 @@ body::before {
 .event-main {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.8rem 1.5rem;
+    gap: 0.5rem 1rem;
     align-items: baseline;
 }
 
@@ -218,15 +255,15 @@ body::before {
 
 .event-name {
     background: #d2ece4;
-    padding: 0.2rem 1rem;
+    padding: 0.1rem 0.8rem;
     border-radius: 30px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #1a4f45;
 }
 
 .event-date {
     color: #587b74;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     display: flex;
     align-items: center;
     gap: 4px;
@@ -236,13 +273,13 @@ body::before {
 .record-list {
     display: flex;
     flex-direction: column;
-    gap: 0.7rem;
+    gap: 0.5rem;
 }
 
 .record-row {
     background: rgba(245, 255, 250, 0.6);
-    border-radius: 50px;
-    padding: 0.9rem 1.2rem;
+    border-radius: 40px;
+    padding: 0.6rem 1rem;
     display: flex;
     flex-wrap: wrap;
     align-items: center;
@@ -253,21 +290,21 @@ body::before {
 .record-info {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem 2rem;
+    gap: 0.8rem 1.5rem;
     align-items: center;
 }
 
 .record-company {
     font-weight: 600;
     color: #1d5950;
-    min-width: 100px;
+    min-width: 80px;
 }
 
 .record-status {
     background: #dcf2ec;
-    padding: 0.2rem 1.2rem;
+    padding: 0.1rem 1rem;
     border-radius: 30px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     color: #215e53;
 }
 
@@ -275,9 +312,9 @@ body::before {
     background: none;
     border: 1.5px solid #5f9b92;
     color: #2b635b;
-    padding: 0.3rem 1.2rem;
+    padding: 0.2rem 1rem;
     border-radius: 30px;
-    font-size: 0.85rem;
+    font-size: 0.8rem;
     cursor: pointer;
     transition: 0.1s;
 }
@@ -293,31 +330,172 @@ body::before {
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .new-record-btn {
     background: #2f6b65;
     border: none;
     color: white;
-    padding: 0.8rem 2rem;
+    padding: 0.5rem 1.5rem;
     border-radius: 40px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     cursor: pointer;
-    box-shadow: 0 8px 12px -6px #1d463f;
+    box-shadow: 0 4px 8px -4px #1d463f;
     border: 1px solid #a8d5cb;
 }
 
-/* 模态框 */
+/* 公司视图 */
+.company-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+.company-group {
+    background: rgba(240, 250, 245, 0.6);
+    border-radius: 24px;
+    padding: 0.8rem;
+}
+.company-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1.2rem;
+    font-weight: 500;
+    color: #1d5a50;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    border-radius: 30px;
+    background: rgba(210, 240, 230, 0.5);
+}
+.company-header .toggle-icon {
+    font-size: 1.2rem;
+    width: 1.5rem;
+}
+.company-records {
+    margin-top: 0.5rem;
+    padding-left: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+.company-record-item {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 30px;
+    padding: 0.5rem 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-left: 4px solid #5f9b92;
+    cursor: pointer;
+}
+.company-record-item .position-info {
+    font-weight: 500;
+}
+.company-record-item .status-badge {
+    background: #dcf2ec;
+    padding: 0.1rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.75rem;
+}
+
+/* 全览时间线卡片 (新样式) */
+.global-timeline-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+}
+.timeline-record-card {
+    background: rgba(245, 255, 250, 0.7);
+    backdrop-filter: blur(4px);
+    border-radius: 28px;
+    padding: 1rem 1.2rem;
+    border: 1px solid #c8e0d7;
+    cursor: pointer;
+    transition: 0.1s;
+}
+.timeline-record-card:hover {
+    background: rgba(230, 250, 240, 0.9);
+}
+.timeline-card-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.8rem 1.5rem;
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px dashed #9fcbc1;
+}
+.timeline-card-header .company {
+    font-weight: 600;
+    font-size: 1.2rem;
+    color: #1d4f4a;
+}
+.timeline-card-header .position {
+    font-size: 1rem;
+    color: #36635c;
+}
+.timeline-card-header .status {
+    background: #dcf2ec;
+    padding: 0.2rem 1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    color: #215e53;
+}
+.timeline-card-header .date {
+    color: #587b74;
+    font-size: 0.9rem;
+    margin-left: auto;
+}
+
+.timeline-card-events {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+.timeline-event-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 40px;
+    padding: 0.4rem 1rem;
+}
+.timeline-event-row .event-icon {
+    font-size: 1.2rem;
+    width: 2rem;
+    text-align: center;
+}
+.timeline-event-row .event-type {
+    font-weight: 500;
+    color: #1d5a50;
+    min-width: 70px;
+}
+.timeline-event-row .event-remark {
+    color: #44716a;
+    font-size: 0.85rem;
+    flex: 1;
+}
+.timeline-event-row .event-date {
+    color: #587b74;
+    font-size: 0.8rem;
+    white-space: nowrap;
+}
+
+/* 模态框 (修复定位问题) */
 .modal-overlay {
     position: fixed;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
     background-color: rgba(0, 0, 0, 0.2);
     backdrop-filter: blur(5px);
-    display: none;
+    display: none;  /* 默认隐藏 */
     align-items: center;
     justify-content: center;
-    z-index: 100;
+    z-index: 2000;  /* 确保在最上层 */
 }
 
 .modal-content {
@@ -328,7 +506,7 @@ body::before {
     max-height: 85vh;
     overflow-y: auto;
     border-radius: 48px;
-    padding: 2rem 1.8rem;
+    padding: 1.5rem 1.8rem;
     box-shadow: 0 30px 50px -20px #1e3f3a;
     border: 1px solid #eef9f2;
 }
@@ -337,36 +515,33 @@ body::before {
     font-size: 2rem;
     font-weight: 300;
     color: #1b5b52;
-    margin-bottom: 1.8rem;
+    margin-bottom: 1.2rem;
 }
 
+/* 表单样式 */
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: 1.2rem;
 }
-
 label {
     font-weight: 500;
     color: #215f56;
     display: block;
-    margin-bottom: 0.3rem;
-    font-size: 0.95rem;
+    margin-bottom: 0.2rem;
+    font-size: 0.9rem;
 }
-
 input, select, textarea {
     width: 100%;
-    padding: 0.8rem 1rem;
+    padding: 0.7rem 1rem;
     border-radius: 40px;
     border: 1px solid #bcdbd2;
     background: rgba(255,255,250,0.9);
-    font-size: 1rem;
+    font-size: 0.95rem;
     outline: none;
 }
-
 input:focus, select:focus, textarea:focus {
     border-color: #2f7b70;
     box-shadow: 0 0 0 3px rgba(80, 150, 140, 0.2);
 }
-
 .event-row {
     display: flex;
     flex-wrap: wrap;
@@ -374,90 +549,99 @@ input:focus, select:focus, textarea:focus {
     margin-bottom: 0.8rem;
     align-items: center;
     background: #e4f5ef;
-    padding: 0.8rem;
+    padding: 0.6rem;
     border-radius: 50px;
 }
-
 .event-row select, .event-row input {
     width: auto;
     flex: 2 1 130px;
 }
-
 .event-row input[type="date"] {
     flex: 1 1 120px;
 }
-
 .remove-event {
     background: #d16262a0;
     border: none;
     color: white;
     border-radius: 30px;
-    padding: 0.4rem 1rem;
+    padding: 0.3rem 0.8rem;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
 }
-
 .add-event-btn {
     background: none;
     border: 1px dashed #5f9b92;
-    padding: 0.5rem 1.2rem;
+    padding: 0.4rem 1.2rem;
     border-radius: 40px;
     color: #25685e;
-    margin-top: 0.5rem;
+    margin-top: 0.3rem;
     cursor: pointer;
 }
-
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
-    margin-top: 2rem;
+    margin-top: 1.5rem;
     flex-wrap: wrap;
 }
-
 .btn-primary {
     background: #2f6b65;
     border: none;
     color: white;
-    padding: 0.8rem 2.2rem;
+    padding: 0.6rem 2rem;
     border-radius: 40px;
-    font-size: 1.1rem;
+    font-size: 1rem;
     cursor: pointer;
 }
-
 .btn-secondary {
     background: transparent;
     border: 1px solid #59837b;
     color: #2b635b;
-    padding: 0.8rem 2rem;
+    padding: 0.6rem 1.8rem;
+    border-radius: 40px;
+    cursor: pointer;
+}
+.delete-record-btn {
+    background: #d26b6b;
+    color: white;
+    border: none;
+    padding: 0.5rem 1.5rem;
     border-radius: 40px;
     cursor: pointer;
 }
 
-/* 详情页内的思维导图时间线 */
-.mindflow-container {
-    margin-top: 2rem;
-    padding: 1rem 0;
+/* 详情页样式 */
+.detail-view p {
+    margin: 0.6rem 0;
+    background: #e9f7f2;
+    padding: 0.5rem 1.2rem;
+    border-radius: 40px;
+    word-break: break-word;
 }
-
+.jd-link {
+    color: #1e6b5e;
+    text-decoration: underline;
+}
+.mindflow-container {
+    margin-top: 1rem;
+    padding: 0.5rem 0;
+}
 .mindflow-node {
     display: flex;
     align-items: stretch;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     position: relative;
 }
-
 .mindflow-node:not(:last-child)::before {
     content: '';
     position: absolute;
     left: 20px;
     top: 40px;
-    bottom: -20px;
+    bottom: -15px;
     width: 2px;
     background: #9fcbc1;
     z-index: 0;
 }
-
 .node-icon {
     width: 40px;
     height: 40px;
@@ -472,11 +656,10 @@ input:focus, select:focus, textarea:focus {
     border: 2px solid #5f9b92;
     z-index: 1;
 }
-
 .node-content {
     background: #eff9f5;
     border-radius: 30px;
-    padding: 0.8rem 1.5rem;
+    padding: 0.6rem 1.2rem;
     flex: 1;
     display: flex;
     flex-wrap: wrap;
@@ -485,64 +668,38 @@ input:focus, select:focus, textarea:focus {
     border-left: 5px solid #5f9b92;
     z-index: 1;
 }
-
 .node-content.reject {
     border-left-color: #d26b6b;
     background: #ffecec;
 }
-
 .node-type {
     font-weight: 600;
     color: #1f5a50;
-    min-width: 80px;
+    min-width: 70px;
 }
-
 .node-remark {
     color: #44716a;
     font-size: 0.9rem;
 }
-
 .node-date {
     color: #587b74;
     font-size: 0.85rem;
     white-space: nowrap;
 }
-
 .mindflow-interrupt {
     text-align: center;
     color: #c75b5b;
     font-weight: 500;
-    margin: 0.5rem 0 1rem;
+    margin: 0.3rem 0 0.8rem;
     font-style: italic;
 }
 
-.detail-view p {
-    margin: 0.8rem 0;
-    background: #e9f7f2;
-    padding: 0.5rem 1.2rem;
-    border-radius: 40px;
-    word-break: break-word;
-}
-
-.jd-link {
-    color: #1e6b5e;
-    text-decoration: underline;
-}
-
-.delete-record-btn {
-    background: #d26b6b;
-    color: white;
-    border: none;
-    padding: 0.5rem 1.8rem;
-    border-radius: 40px;
-    margin-left: 1rem;
-    cursor: pointer;
-}
-
-/* 移动端 */
+/* 移动端适配 */
 @media (max-width: 600px) {
-    .stat-item { min-width: 70px; }
-    .initial-card h1 { font-size: 2.5rem; }
-    .enter-btn { font-size: 1.3rem; }
-    .event-row select, .event-row input { flex: 1 1 100%; }
+    .stat-item { min-width: 55px; }
+    .stat-number { font-size: 1.3rem; }
+    .initial-card h1 { font-size: 2.2rem; }
+    .enter-btn { font-size: 1.2rem; padding: 0.6rem 2rem; }
+    .nav-tab { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
+    .timeline-card-header .date { margin-left: 0; width: 100%; }
 }
