@@ -5,13 +5,16 @@
     let currentFilterStatus = null;
     let currentDetailId = null;
 
-    // 柔和风景图片列表
+    // 多个备选背景图片（混合 Pexels 和 Unsplash，增加成功率）
     const backgroundImages = [
-        'https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/1903702/pexels-photo-1903702.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&w=1920',
-        'https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&cs=tinysrgb&w=1920'
+        'https://images.pexels.com/photos/1323550/pexels-photo-1323550.jpeg?auto=compress&cs=tinysrgb&w=1920', // 山丘
+        'https://images.pexels.com/photos/1903702/pexels-photo-1903702.jpeg?auto=compress&cs=tinysrgb&w=1920', // 森林
+        'https://images.pexels.com/photos/2387873/pexels-photo-2387873.jpeg?auto=compress&cs=tinysrgb&w=1920', // 湖泊
+        'https://images.pexels.com/photos/167699/pexels-photo-167699.jpeg?auto=compress&cs=tinysrgb&w=1920',   // 公路
+        'https://images.pexels.com/photos/814499/pexels-photo-814499.jpeg?auto=compress&cs=tinysrgb&w=1920',   // 日落
+        // 再添加几个 Unsplash 作为补充
+        'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80',
+        'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80'
     ];
 
     // 事件类型选项
@@ -54,10 +57,35 @@
     const companyListContainer = document.getElementById('companyListContainer');
     const globalTimelineCards = document.getElementById('globalTimelineCards');
 
-    // ---------- 随机背景 ----------
+    // ---------- 增强版随机背景设置（带详细日志和多重后备）----------
     function setRandomBackground() {
-        const randomIndex = Math.floor(Math.random() * backgroundImages.length);
-        document.body.style.backgroundImage = `url('${backgroundImages[randomIndex]}')`;
+        // 1. 立即设置一个纯色背景，防止任何瞬间空白
+        document.body.style.backgroundColor = '#e8e1d4';
+        document.body.style.backgroundImage = 'none';
+
+        // 2. 随机打乱图片顺序，增加命中率
+        const shuffled = [...backgroundImages].sort(() => Math.random() - 0.5);
+        console.log('开始尝试加载背景图片，顺序:', shuffled);
+
+        function tryLoadImage(index) {
+            if (index >= shuffled.length) {
+                console.warn('所有背景图片均加载失败，保持纯色背景 #e8e1d4');
+                return;
+            }
+            const img = new Image();
+            img.src = shuffled[index];
+            img.onload = () => {
+                console.log(`✅ 背景图片加载成功: ${shuffled[index]}`);
+                document.body.style.backgroundImage = `url('${shuffled[index]}')`;
+                // 背景颜色保留作为后备，但图片会覆盖
+            };
+            img.onerror = () => {
+                console.warn(`❌ 图片加载失败: ${shuffled[index]}`);
+                tryLoadImage(index + 1);
+            };
+        }
+        
+        tryLoadImage(0);
     }
 
     // ---------- 数据初始化 ----------
@@ -516,11 +544,10 @@
 
     // ---------- 事件绑定 ----------
     enterBtn.addEventListener('click', () => {
-        setRandomBackground();
         initialScreen.style.display = 'none';
         mainApp.style.display = 'flex';
-        loadData();
-        switchView('dashboard-view');
+        loadData();   // 重新加载数据（但数据已预加载，这里确保最新）
+        fullRender(); // 渲染主界面
     });
 
     // 导航点击
@@ -559,6 +586,7 @@
         }
     });
 
-    // 预加载数据
+    // ---------- 初始化：加载数据并设置随机背景（这样初始界面就有背景图）----------
     loadData();
+    setRandomBackground(); // 页面加载时立即设置背景，初始界面即可看到
 })();
