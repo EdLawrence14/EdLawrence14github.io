@@ -18,28 +18,49 @@
 
     <!-- 主应用界面 (初始隐藏) -->
     <div id="main-app">
-        <!-- 顶部新增按钮 -->
+        <!-- 顶部导航栏 + 新增按钮 -->
         <div class="glass-card top-bar">
-            <span style="font-size: 1.6rem; font-weight: 300; color: #1d5a50;">📋 求职驿站</span>
-            <button class="new-record-btn" id="openNewModalBtn">+ 新增投递</button>
+            <div class="nav-tabs">
+                <button class="nav-tab active" data-view="dashboard">📊 看板</button>
+                <button class="nav-tab" data-view="company">🏢 公司视图</button>
+                <button class="nav-tab" data-view="timeline">⏳ 全览时间线</button>
+            </div>
+            <button class="new-record-btn" id="openNewModalBtn">+ 新增</button>
         </div>
 
-        <!-- 统计看板 -->
-        <div class="glass-card" id="statsBoard">
-            <div class="section-title">投递看板</div>
-            <div class="stats-grid" id="statCards"></div>
+        <!-- 看板视图 (默认显示) -->
+        <div id="dashboard-view" class="view active">
+            <!-- 统计看板 -->
+            <div class="glass-card" id="statsBoard">
+                <div class="section-title">投递看板</div>
+                <div class="stats-grid" id="statCards"></div>
+            </div>
+            <!-- 近期动态 -->
+            <div class="glass-card">
+                <div class="section-title">📌 近期动态</div>
+                <div id="recentTimeline" class="timeline-list"></div>
+            </div>
+            <!-- 所有投递列表 -->
+            <div class="glass-card">
+                <div class="section-title">📋 所有投递</div>
+                <div id="recordListContainer" class="record-list"></div>
+            </div>
         </div>
 
-        <!-- 近期动态（保留，但只展示最近5条事件） -->
-        <div class="glass-card">
-            <div class="section-title">📌 近期动态</div>
-            <div id="recentTimeline" class="timeline-list"></div>
+        <!-- 公司视图 (按公司分组) -->
+        <div id="company-view" class="view">
+            <div class="glass-card">
+                <div class="section-title">🏢 按公司聚合</div>
+                <div id="companyListContainer" class="company-list"></div>
+            </div>
         </div>
 
-        <!-- 所有投递列表 -->
-        <div class="glass-card">
-            <div class="section-title">📋 所有投递</div>
-            <div id="recordListContainer" class="record-list"></div>
+        <!-- 全览时间线视图 (每个记录一个卡片，展示其时间线) -->
+        <div id="timeline-view" class="view">
+            <div class="glass-card">
+                <div class="section-title">⏳ 完整投递流程</div>
+                <div id="globalTimelineCards" class="global-timeline-cards"></div>
+            </div>
         </div>
     </div>
 
@@ -96,7 +117,7 @@
         </div>
     </div>
 
-    <!-- 详情模态框 (包含思维导图式时间线) -->
+    <!-- 详情模态框 -->
     <div id="detailModal" class="modal-overlay">
         <div class="modal-content detail-view">
             <div class="modal-title" id="detailModalTitle">职位详情</div>
